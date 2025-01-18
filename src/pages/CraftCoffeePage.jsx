@@ -1,5 +1,5 @@
 function CraftCoffeePage() {
-  return <div>CraftCoffeePage</div>;
+  return <div>Test</div>;
 }
 
 export default CraftCoffeePage;
