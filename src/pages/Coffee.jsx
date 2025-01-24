@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useFetch } from 'react';
 import styled from 'styled-components';
 import coffee from "../assets/coffee.webp"
 
@@ -13,7 +13,7 @@ const Container = styled.div`
 const Box = styled.div`
   background-color: #fff;
   border: 1px solid #333;
-  border-radius: 8px;
+  border-radius: 9px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
@@ -63,12 +63,13 @@ const Button = styled.button`
 const CurrencyButton = styled.button`
   background-color: #333;
   color: white;
+  padding: 10px 20px;
   border: none;
-  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
+  margin: 20px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: darkgoldenrod;
@@ -98,7 +99,7 @@ const CoffeePage = () => {
 
   const convertPrice = (price) => {
     if (currency === 'GEL') {
-      return (price * 2.7).toFixed(2); 
+      return (price * 2.85).toFixed(2); 
     }
     return price.toFixed(2); 
   };
