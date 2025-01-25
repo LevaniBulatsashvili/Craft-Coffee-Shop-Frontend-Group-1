@@ -1,6 +1,9 @@
-import React, { useState, useFetch } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import coffee from "../assets/coffee.webp"
+import useFetch from '../hooks/useFetch';
+
+
 
 // Styled-components
 const Container = styled.div`
@@ -90,18 +93,62 @@ const coffeeData = [
   { id: 10, title: 'Irish Coffee', description: 'Coffee with a kick of whiskey.', image: coffee, price: 7.5 },
 ];
 
+
+
+
 const CoffeePage = () => {
+  const [coffeeList, setCoffeeList] = useState([]);
   const [currency, setCurrency] = useState('USD'); 
+  
+  const {data,loading,error }=useFetch (
+      "https://crudapi.co.uk/api/v1/coffees",
+      'GET',
+      [],
+      
+      
+    )
+   
+    useEffect(() => {
+      console.log(data);
+
+      
+      if (data.length > 0) {
+        setCoffeeList(data);
+      } else {
+        setCoffeeList(coffeeData);
+      }
+    }, [data]);
+
+    if (loading) return <p>Loading...</p>;
+
+  if (error) return <p>Error fetching coffee data.</p>;
 
   const toggleCurrency = () => {
     setCurrency(currency === 'USD' ? 'GEL' : 'USD'); 
   };
 
   const convertPrice = (price) => {
+    
+    if (typeof price !== 'number' || isNaN(price)) {
+      return 'N/A';
+    }///ეს თუ არ დავწერე ერორია თუ დავწერე  N/A' აბრუნებს
     if (currency === 'GEL') {
-      return (price * 2.85).toFixed(2); 
+      return (price * 2.85).toFixed(2);
     }
-    return price.toFixed(2); 
+    return price.toFixed(2) 
+  };
+
+  const calculatePrice = (items) => {
+    // gavgo ari item tu ara array-Si
+    if (!items || !Array.isArray(items)) {
+      return 'N/A'; // თუ არ არის დააბრუნებს n/a
+    }
+  
+    const total = items.reduce((initial, item) => {
+      return initial + item.price; // daamatebs fraiss  initial mnSvnelobas 2
+    }, 2); 
+  
+    return convertPrice(total); // daabrune mTliani fasi
   };
 
   return (
@@ -110,22 +157,29 @@ const CoffeePage = () => {
         Switch to {currency === 'USD' ? 'GEL' : 'USD'}
       </CurrencyButton>
       <Container>
-        {coffeeData.map((coffee) => (
-          <Box key={coffee.id}>
-            <Image src={coffee.image} alt={coffee.title} />
+      {coffeeList && coffeeList.length > 0 ? (
+        coffeeList.map((coffee,index ) => (
+            // {/* */ar imshava skhvanairad */}
+          <Box key={coffee._uuid || index}> 
+        
+        <Image src={coffee.imageUrl} alt={coffee.title}/>
             <Content>
-              <Title>{coffee.title}</Title>
-              <Description>{coffee.description}</Description>
-              <p>Price: {currency === 'USD' ? '$' : '₾'} {convertPrice(coffee.price)}</p>
-              <Button>Learn More</Button>
-            </Content>
-          </Box>
-        ))}
+            <Title>{coffee.title}</Title>
+            <Description>{coffee.description}</Description>
+                <p>
+                Price: {currency === 'USD' ? '$' : '₾'}
+                 {calculatePrice(coffee.ingredients)}
+                </p>
+                <Button>Learn More</Button>
+              </Content>
+            </Box>
+          ))
+        ) : (
+          <p>No coffees available.</p>
+        )}
       </Container>
     </div>
   );
 };
 
 export default CoffeePage;
-
-

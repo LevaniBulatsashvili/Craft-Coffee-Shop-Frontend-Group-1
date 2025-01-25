@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ingredients from "../assets/ingredients.png"
+import useFetch from '../hooks/useFetch';
 
 // Styled-components
 const CoffeeCatalog = styled.div`
@@ -71,7 +72,7 @@ const CoffeeDetails = styled.p`
   font-size: 0.9rem;
   color: #333;
   margin-top: 15px;
-  display: ${props => (props.showDetails ? 'block' : 'none')};
+  display: ${props => (props.showdetails ? 'block' : 'none')};
 `;
 
 const ToggleButton = styled.button`
@@ -104,8 +105,26 @@ const coffeeData = [
 ];
 
 const Ingredients = () => {
+  const [ingredients, setIngredients] = useState([]);
   const [isUSD, setIsUSD] = useState(true); 
-  const [showDetails, setShowDetails] = useState(null); 
+  const [showdetails, setShowdetails] = useState([]); 
+  const { data, loading, error, fetchData } = useFetch(
+    "https://crudapi.co.uk/api/v1/ingredients", 
+    "GET", 
+    []
+  );
+    
+  
+ 
+ useEffect(() => {
+  console.log(data)
+  if (data.length > 0) {
+    setIngredients(data); 
+  } else {
+    setIngredients([]); 
+  }
+}, [data]);
+
   const exchangeRate = 2.85; 
 
   const toggleCurrency = () => {
@@ -113,7 +132,7 @@ const Ingredients = () => {
   };
 
   const toggleDetails = (index) => {
-    setShowDetails(showDetails === index ? null : index);
+    setShowdetails(showdetails === index ? null : index)
   };
 
   return (
@@ -137,7 +156,7 @@ const Ingredients = () => {
                   Learn More
                 </LearnMoreButton>
               </Content>
-              <CoffeeDetails showDetails={showDetails === index}>
+              <CoffeeDetails $showdetails={showdetails === index}>
                 {coffee.details}
               </CoffeeDetails>
             </CoffeeItem>
