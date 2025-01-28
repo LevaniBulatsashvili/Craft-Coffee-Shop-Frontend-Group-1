@@ -7,7 +7,6 @@ function useFetch(url, method, initialData = null) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-
   const fetchData = () => {
     setLoading(true);
     fetch(url, {
@@ -21,8 +20,7 @@ function useFetch(url, method, initialData = null) {
         if (!res.ok) throw Error("Failed To Fetch Data");
         return res.json();
       })
-      .then((data) => 
-        setData(data.items ?? data))
+      .then((data) => setData(data.items ?? data))
       .catch((err) => setError(err))
       .finally(() => setLoading(false));
   };
