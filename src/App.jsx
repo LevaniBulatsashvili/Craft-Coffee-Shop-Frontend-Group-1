@@ -1,24 +1,36 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Coffee from './pages/Coffee';
-import Ingredients from './pages/Ingredients';
-import CoffeeDetails from './pages/CoffeeDetails';
-import IngredientDetails from './pages/IngredientDetails';
-import Header from './components/Header';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Header from "./layouts/Header";
+import PageContainer from "./layouts/PageContainer";
+import styled from "styled-components";
+import CoffeesPage from "./pages/CoffeesPage";
+import IngredientsPage from "./pages/IngredientsPage";
+import CoffeeDetailsPage from "./pages/CoffeeDetailsPage";
+import IngredientDetailsPage from "./pages/IngredientDetailsPage";
+
+const StyledApp = styled.div`
+  min-height: 100dvh;
+  background-color: #f4f4f9;
+`;
 
 const App = () => {
   return (
-    <div>
+    <StyledApp>
       <Header />
-      <Routes>
-        <Route path="/coffee" element={<Coffee />} />
-        <Route path="/ingredients" element={<Ingredients />} />
-        <Route path="/coffee/details/:id" element={<CoffeeDetails />} />
-        <Route path="/ingredient/details/:id" element={<IngredientDetails />} />
-      </Routes>
-    </div>
+      <PageContainer>
+        <Routes>
+          <Route path="/" element={<Navigate to="/coffees" replace />} />
+          <Route path="/coffees" element={<CoffeesPage />} />
+          <Route path="/ingredients" element={<IngredientsPage />} />
+          <Route path="/coffees/details/:id" element={<CoffeeDetailsPage />} />
+          <Route
+            path="/ingredients/details/:id"
+            element={<IngredientDetailsPage />}
+          />
+        </Routes>
+      </PageContainer>
+    </StyledApp>
   );
 };
 
 export default App;
-
